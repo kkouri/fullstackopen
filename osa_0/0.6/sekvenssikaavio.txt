@@ -1,0 +1,2 @@
+selain->palvelin: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa\n[{content: "new note", ...}]
+palvelin-->selain: HTTP-statuskoodi
