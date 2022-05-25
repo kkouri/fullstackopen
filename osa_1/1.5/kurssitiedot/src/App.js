@@ -1,3 +1,5 @@
+import { getByTestId } from "@testing-library/react"
+
 const App = () => {
   const course = {
     name: 'Half Stack application development',
@@ -35,18 +37,20 @@ const App = () => {
     </>
   )}
 
-  const Total = (props) => { return (
+  const Total = ({parts}) => { 
+    let total = parts.reduce((a,b) => a = a + b.exercises, 0)
+    return (
     <>
-      <p>Number of exercises {props.parts[0].exercises + props.parts[1].exercises + props.parts[2].exercises}</p>
+      <p>Number of exercises {total}</p>
     </>
   )}
   
   return (
-    <>
+    <div>
       <Header course={course} />
       <Content parts={course.parts} />
       <Total parts={course.parts} />
-    </>
+    </div>
   )
 }
 
