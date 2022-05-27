@@ -19,11 +19,9 @@ const App = () => {
         bad
       </button>
       <h1>statistics</h1>
-      <texts className="Text">
-        <p>good {good}</p>
-        <p>neutral {neutral}</p>
-        <p>bad {bad}</p>
-        </texts>
+      <p>good {good}</p>
+      <p>neutral {neutral}</p>
+      <p>bad {bad}</p>
     </div>
   )
 }
