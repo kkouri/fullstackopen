@@ -19,12 +19,12 @@ const App = () => {
   const [values, setValues] = useState(initialValues)
 
   const handleInputChange = (event) => {
-    const { name, value } = event.target;
+    const { name, value } = event.target
     setValues({
       ...values,
       [name]: value,
-    });
-  };
+    })
+  }
 
   const addPerson = (event) => {
     event.preventDefault()
