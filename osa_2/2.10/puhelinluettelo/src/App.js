@@ -10,9 +10,9 @@ const FilterForm = (props) => {
   <form onSubmit={e => { e.preventDefault() }}>
         <div>filter shown with
           <input
-          value={ props.filter }
-          onChange={ props.handleFilterChange }
-          ></input>
+            value={ props.filter }
+            onChange={ props.handleFilterChange }
+          />
         </div>
   </form>
   )
@@ -44,7 +44,7 @@ const Names = (props) => {
 
   let filteredPersons = props.persons
   if (props.filter.trim() !== "") {
-  filteredPersons = props.persons.filter(person => props.filter.toUpperCase().indexOf(person.name.toUpperCase().charAt(0)) !== -1)
+    filteredPersons = props.persons.filter(person => person.name.toUpperCase().search(props.filter.toUpperCase()) !== -1)
   }
 
   return (
