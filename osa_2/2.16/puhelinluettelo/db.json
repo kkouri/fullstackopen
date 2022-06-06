@@ -1,0 +1,49 @@
+{
+  "persons": [
+    {
+      "name": "Arto Hellas",
+      "number": "040-123456",
+      "id": 1
+    },
+    {
+      "name": "Ada Lovelace",
+      "number": "39-44-5323523",
+      "id": 2
+    },
+    {
+      "name": "Dan Abramov",
+      "number": "12-43-234345",
+      "id": 3
+    },
+    {
+      "name": "Mary Poppendieck",
+      "number": "39-23-6423122",
+      "id": 4
+    },
+    {
+      "name": "Aku Ankka",
+      "number": "313-123456",
+      "id": 5
+    },
+    {
+      "name": "Teppo Tulppa",
+      "number": "000-123456",
+      "id": 6
+    },
+    {
+      "name": "Iines Ankka",
+      "number": "111-222222",
+      "id": 7
+    },
+    {
+      "name": "Pelle Peloton",
+      "number": "123-654321",
+      "id": 8
+    },
+    {
+      "name": "Roope Ankka",
+      "number": "999-999999",
+      "id": 9
+    }
+  ]
+}
