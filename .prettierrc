@@ -1,0 +1,11 @@
+{
+  "tabWidth": 2,
+  "useTabs": false,
+  "editor.formatOnSave": true,
+  "prettier.singleQuote": true,
+  "prettier.printWidth": 80,
+  "trailing-comma": "none",
+  "semi": false,
+  "singleQuote": true,
+  "endOfLine": "lf"
+}

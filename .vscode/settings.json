@@ -1,0 +1,13 @@
+{
+	"prettier.trailingComma": "none",
+	"prettier.jsxSingleQuote": true,
+	"prettier.semi": false,
+	"prettier.requireConfig": true,
+	"prettier.singleQuote": true,
+	"prettier.useTabs": true,
+	"editor.formatOnSave": true,
+	"editor.defaultFormatter": "esbenp.prettier-vscode",
+	"editor.tabSize": 2,
+	"editor.comments.insertSpace": false,
+	"editor.detectIndentation": false
+}
