@@ -1,0 +1,16 @@
+###
+GET http://localhost:3001/api/blogs
+
+###
+POST http://localhost:3001/api/blogs HTTP/1.1
+content-type: application/json
+
+{
+    "title": "Rahasäiliö",
+    "author": "Roope Ankka",
+    "url": "123abc",
+    "likes": 10
+}
+
+### False request
+GET http://localhost:3001/api/blogzzz
