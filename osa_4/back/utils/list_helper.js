@@ -54,9 +54,33 @@ const mostBlogs = (blogs) => {
   )
 }
 
+const mostLikes = (blogs) => {
+  if (blogs.length === 0) {
+    return 0
+  }
+  const likeCounts = {}
+  blogs.forEach((blog) => {
+    if (blog.author in likeCounts) {
+      likeCounts[blog.author] = likeCounts[blog.author] + blog.likes
+    } else {
+      likeCounts[blog.author] = blog.likes
+    }
+  })
+
+  const entries = Object.entries(likeCounts)
+  const likes = entries.map((entry) => entry[1])
+  let i = likes.indexOf(Math.max(...likes))
+
+  return {
+    author: entries[i][0],
+    likes: entries[i][1],
+  }
+}
+
 module.exports = {
   dummy,
   totalLikes,
   favoriteBlog,
   mostBlogs,
+  mostLikes,
 }
