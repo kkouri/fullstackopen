@@ -34,4 +34,18 @@ blogsRouter.delete('/:id', (req, res, next) => {
     })
 })
 
+blogsRouter.put('/:id', (req, res, next) => {
+  const { title, author, url, likes } = req.body
+
+  Blog.findByIdAndUpdate(
+    req.params.id,
+    { title, author, url, likes },
+    { new: true, runValidators: true, context: 'query' }
+  )
+    .then((updatedBlog) => {
+      res.json(updatedBlog)
+    })
+    .catch((error) => next(error))
+})
+
 module.exports = blogsRouter

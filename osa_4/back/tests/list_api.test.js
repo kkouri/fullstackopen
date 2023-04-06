@@ -128,7 +128,6 @@ describe('Deleting blogs', () => {
   test('deleting a blog', async () => {
     const blogsAtStart = await helper.blogsInDb()
     const blogToDelete = blogsAtStart[0]
-    console.log(blogToDelete)
 
     await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204)
 
@@ -145,6 +144,47 @@ describe('Deleting blogs', () => {
   })
 })
 
+describe('Updating blogs', () => {
+  beforeEach(async () => {
+    await Blog.deleteMany({})
+
+    const blogObjects = helper.initialBlogs.map((blog) => new Blog(blog))
+    const promiseArray = blogObjects.map((blog) => blog.save())
+    await Promise.all(promiseArray)
+    jest.setTimeout(10000)
+  })
+
+  test('updating a blog', async () => {
+    const blogsAtStart = await helper.blogsInDb()
+    const blogToUpdate = blogsAtStart[0]
+
+    const likeValue = 100
+
+    const updatedValues = { ...blogToUpdate, likes: likeValue }
+
+    await api
+      .put(`/api/blogs/${blogToUpdate.id}`)
+      .send(updatedValues)
+      .expect(200)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    const updatedBlog = blogsAtEnd.find((blog) => (blog.id = blogToUpdate.id))
+
+    expect(updatedBlog.likes).toBe(likeValue)
+  })
+
+  test('updating a non existing blog', async () => {
+    const nonExistingId = '5ebadc45a99bde77b2efb20e'
+    const updatedValues = {
+      title: 'foofoo',
+      author: 'barbar',
+      url: 'bazbaz',
+      likes: 0,
+    }
+
+    await api.put(`/api/blogs/${nonExistingId}`).send(updatedValues).expect(200)
+  })
+})
 afterAll(async () => {
   await mongoose.connection.close()
 })
