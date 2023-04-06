@@ -51,7 +51,10 @@ test('valid blogs can be added', async () => {
 })
 
 test('non valid blogs are not added', async () => {
-  const newBlog = { title: 'new blog!', author: 'bar' }
+  const newBlog = {
+    title: 'new blog!',
+    author: 'bar',
+  }
   await api.post('/api/blogs').send(newBlog).expect(400)
 
   const blogsAtEnd = await helper.blogsInDb()
@@ -73,6 +76,30 @@ test('empty like field is casted to value 0', async () => {
   const response = await api.get('/api/blogs')
   const blog = response.body.slice(-1)[0]
   expect(blog.likes).toBe(0)
+})
+
+test('blogs with missing title field are not added', async () => {
+  const newBlog = {
+    author: 'bar',
+    url: 'baz',
+    likes: 0,
+  }
+  await api.post('/api/blogs').send(newBlog).expect(400)
+
+  const blogsAtEnd = await helper.blogsInDb()
+  expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
+})
+
+test('blogs with missing author field are not added', async () => {
+  const newBlog = {
+    title: 'foo',
+    url: 'baz',
+    likes: 0,
+  }
+  await api.post('/api/blogs').send(newBlog).expect(400)
+
+  const blogsAtEnd = await helper.blogsInDb()
+  expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
 })
 
 afterAll(async () => {
