@@ -58,6 +58,23 @@ test('non valid blogs are not added', async () => {
   expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
 })
 
+test('empty like field is casted to value 0', async () => {
+  const newBlog = {
+    title: 'new blog!',
+    author: 'bar',
+    url: 'baz',
+  }
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const response = await api.get('/api/blogs')
+  const blog = response.body.slice(-1)[0]
+  expect(blog.likes).toBe(0)
+})
+
 afterAll(async () => {
   await mongoose.connection.close()
 })
