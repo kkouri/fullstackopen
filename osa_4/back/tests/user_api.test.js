@@ -40,3 +40,46 @@ describe('when there is initially one user at db', () => {
     expect(usernames).toContain(newUser.username)
   })
 })
+
+describe('Validating inputs', () => {
+  beforeEach(async () => {
+    await User.deleteMany({})
+  })
+
+  test('too short username', async () => {
+    const newUser = {
+      username: 'a',
+      name: 'bar',
+      password: 'secret',
+    }
+
+    await api.post('/api/users').send(newUser).expect(400)
+  })
+
+  test('too short password', async () => {
+    const newUser = {
+      username: 'baz',
+      name: 'bar',
+      password: 's',
+    }
+
+    await api.post('/api/users').send(newUser).expect(400)
+  })
+
+  test('usernames must be unique', async () => {
+    const newUser1 = {
+      username: 'unique',
+      name: 'bar',
+      password: 'secret1',
+    }
+
+    const newUser2 = {
+      username: 'unique',
+      name: 'baz',
+      password: 'secret2',
+    }
+
+    await api.post('/api/users').send(newUser1).expect(201)
+    await api.post('/api/users').send(newUser2).expect(500)
+  })
+})
