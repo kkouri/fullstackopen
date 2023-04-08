@@ -7,15 +7,24 @@ const api = supertest(app)
 
 const Blog = require('../models/blog')
 
-describe('Fetching blogs from database', () => {
+const initialize = () =>
   beforeEach(async () => {
     await Blog.deleteMany({})
 
-    const blogObjects = helper.initialBlogs.map((blog) => new Blog(blog))
+    // temp
+    const usersAtStart = await helper.usersInDb()
+    const userId = usersAtStart[0].id
+
+    const blogObjects = helper.initialBlogs.map((blog) => {
+      const blogWithUserId = { ...blog, userId: userId }
+      return new Blog(blogWithUserId)
+    })
     const promiseArray = blogObjects.map((blog) => blog.save())
     await Promise.all(promiseArray)
-    jest.setTimeout(10000)
   })
+
+describe('Fetching blogs from database', () => {
+  initialize()
 
   test('blogs are returned as json', async () => {
     await api
@@ -32,14 +41,7 @@ describe('Fetching blogs from database', () => {
 })
 
 describe('Adding new blogs', () => {
-  beforeEach(async () => {
-    await Blog.deleteMany({})
-
-    const blogObjects = helper.initialBlogs.map((blog) => new Blog(blog))
-    const promiseArray = blogObjects.map((blog) => blog.save())
-    await Promise.all(promiseArray)
-    jest.setTimeout(10000)
-  })
+  initialize()
 
   test('valid blogs can be added', async () => {
     const newBlog = {
@@ -116,14 +118,7 @@ describe('Adding new blogs', () => {
 })
 
 describe('Deleting blogs', () => {
-  beforeEach(async () => {
-    await Blog.deleteMany({})
-
-    const blogObjects = helper.initialBlogs.map((blog) => new Blog(blog))
-    const promiseArray = blogObjects.map((blog) => blog.save())
-    await Promise.all(promiseArray)
-    jest.setTimeout(10000)
-  })
+  initialize()
 
   test('deleting a blog', async () => {
     const blogsAtStart = await helper.blogsInDb()
@@ -145,14 +140,7 @@ describe('Deleting blogs', () => {
 })
 
 describe('Updating blogs', () => {
-  beforeEach(async () => {
-    await Blog.deleteMany({})
-
-    const blogObjects = helper.initialBlogs.map((blog) => new Blog(blog))
-    const promiseArray = blogObjects.map((blog) => blog.save())
-    await Promise.all(promiseArray)
-    jest.setTimeout(10000)
-  })
+  initialize()
 
   test('updating a blog', async () => {
     const blogsAtStart = await helper.blogsInDb()

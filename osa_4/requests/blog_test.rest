@@ -9,7 +9,8 @@ content-type: application/json
     "title": "Rahasäiliö",
     "author": "Roope Ankka",
     "url": "123abc",
-    "likes": 10
+    "likes": 10,
+    "userId": "6430636c99fe75a7977758c7"
 }
 
 ### False request

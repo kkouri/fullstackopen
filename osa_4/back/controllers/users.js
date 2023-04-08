@@ -36,13 +36,23 @@ usersRouter.post(
       passwordHash,
     })
 
-    await user
-      .save()
-      .then((savedUser) => {
-        res.status(201).json(savedUser)
-      })
-      .catch((error) => next(error))
+    try {
+      const savedUser = await user.save()
+      res.status(201).json(savedUser)
+    } catch (error) {
+      next(error)
+    }
   }
 )
+
+usersRouter.get('/', async (req, res) => {
+  const users = await User.find({}).populate('blogs', {
+    title: 1,
+    author: 1,
+    url: 1,
+  })
+
+  res.json(users)
+})
 
 module.exports = usersRouter
