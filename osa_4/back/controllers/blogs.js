@@ -22,7 +22,7 @@ blogsRouter.post('/', async (req, res, next) => {
     title: body.title,
     author: body.author,
     url: body.url,
-    likes: body.likes ? 0 : body.likes,
+    likes: body.likes ? body.likes : 0,
     user: user._id,
   })
 
@@ -42,7 +42,9 @@ blogsRouter.delete('/:id', async (req, res, next) => {
     const userId = req.user.id
     const blog = await Blog.findById(req.params.id)
 
-    if (blog.user.toString() === userId.toString()) {
+    if (!blog) {
+      res.status(404).json({ error: 'blog not found' })
+    } else if (blog.user.toString() === userId.toString()) {
       await Blog.findByIdAndRemove(req.params.id)
       res.status(204).end()
     } else {

@@ -1,31 +1,42 @@
 const mongoose = require('mongoose')
-const supertest = require('supertest')
+const { agent } = require('supertest')
 const helper = require('./test_helper')
 const logger = require('../utils/logger')
 const app = require('../app')
-const api = supertest(app)
-
+const api = agent(app)
 const Blog = require('../models/blog')
+const User = require('../models/user')
+const bcrypt = require('bcrypt')
 
-const initialize = () =>
-  beforeEach(async () => {
-    await Blog.deleteMany({})
+beforeAll(async () => {
+  // Create user
+  await User.deleteMany({})
+  const passwordHash = await bcrypt.hash('password', 10)
+  const user = new User({
+    username: 'username',
+    name: 'name',
+    passwordHash,
+  })
+  await user.save()
 
-    // temp
-    const usersAtStart = await helper.usersInDb()
-    const userId = usersAtStart[0].id
-
-    const blogObjects = helper.initialBlogs.map((blog) => {
-      const blogWithUserId = { ...blog, userId: userId }
-      return new Blog(blogWithUserId)
-    })
-    const promiseArray = blogObjects.map((blog) => blog.save())
-    await Promise.all(promiseArray)
+  // Login
+  const res = await api.post('/api/login').send({
+    username: 'username',
+    password: 'password',
   })
 
-describe('Fetching blogs from database', () => {
-  initialize()
+  api.auth(res.body.token, { type: 'bearer' })
+})
 
+beforeEach(async () => {
+  // Create blogs
+  await Blog.deleteMany({})
+  for (let blog of helper.initialBlogs) {
+    await api.post('/api/blogs').send(blog)
+  }
+})
+
+describe('Fetching blogs from database', () => {
   test('blogs are returned as json', async () => {
     await api
       .get('/api/blogs')
@@ -41,8 +52,6 @@ describe('Fetching blogs from database', () => {
 })
 
 describe('Adding new blogs', () => {
-  initialize()
-
   test('valid blogs can be added', async () => {
     const newBlog = {
       title: 'new blog!',
@@ -81,15 +90,13 @@ describe('Adding new blogs', () => {
       author: 'bar',
       url: 'baz',
     }
-    await api
+    const res = await api
       .post('/api/blogs')
       .send(newBlog)
       .expect(201)
       .expect('Content-Type', /application\/json/)
 
-    const response = await api.get('/api/blogs')
-    const blog = response.body.slice(-1)[0]
-    expect(blog.likes).toBe(0)
+    expect(res.body.likes).toBe(0)
   })
 
   test('blogs with missing title field are not added', async () => {
@@ -118,8 +125,6 @@ describe('Adding new blogs', () => {
 })
 
 describe('Deleting blogs', () => {
-  initialize()
-
   test('deleting a blog', async () => {
     const blogsAtStart = await helper.blogsInDb()
     const blogToDelete = blogsAtStart[0]
@@ -135,13 +140,11 @@ describe('Deleting blogs', () => {
 
   test('deleting a non existing blog', async () => {
     const nonExistingId = '5ebadc45a99bde77b2efb20e'
-    await api.delete(`/api/blogs/${nonExistingId}`).expect(204)
+    await api.delete(`/api/blogs/${nonExistingId}`).expect(404)
   })
 })
 
 describe('Updating blogs', () => {
-  initialize()
-
   test('updating a blog', async () => {
     const blogsAtStart = await helper.blogsInDb()
     const blogToUpdate = blogsAtStart[0]
